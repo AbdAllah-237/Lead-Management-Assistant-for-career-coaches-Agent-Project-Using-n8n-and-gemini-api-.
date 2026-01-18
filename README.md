@@ -1,7 +1,7 @@
 # Lead-Management-Assistant-for-career-coaches-Agent-Project-Using-n8n-and-gemini-api-.
 AI-powered Lead Management Assistant for Career Coaches built with n8n and Google Gemini. Automatically qualifies leads, sends personalized emails, and stores results in Google Sheets.
 
-![AI Lead Management Workflow](Lead-Management-Assistant-for-career-coaches-Agent-Project-Using-n8n-and-gemini-api-./Screenshot_18-1-2026_113055_abdallahmarakby.app.n8n.cloud.jpeg)
+![AI Lead Management Workflow](/Screenshot_18-1-2026_113055_abdallahmarakby.app.n8n.cloud.jpeg)
 
 # This project is an AI-powered lead management system built to help coaches and consultants save time, qualify leads automatically, and respond professionally without manual work.
 
