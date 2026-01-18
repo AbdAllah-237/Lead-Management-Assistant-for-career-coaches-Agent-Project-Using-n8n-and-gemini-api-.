@@ -1,0 +1,367 @@
+{
+  "name": "Lead_management_Assistant_For_Career_Coach",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "lead-submission",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "91c7e382-cd75-474c-9c6b-e96865cd0585",
+      "name": "Form Submission Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -6208,
+        1152
+      ],
+      "webhookId": "db2e2774-faed-4858-ad52-48ced100ae80"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Qualifies the lead using conditional logic:\n● QUALIFIED if {{ $json.query['\"monthly_revenue\"'] }} is $10,000+ AND {{ $json.query['\"biggest_challenge\"'] }} is more than\n50 characters\n● NOT QUALIFIED if {{ $json.query['\"monthly_revenue\"'] }} is under $10,000 OR {{ $json.query['\"biggest_challenge\"'] }} response is too\nshort\n\nWrite a personalized response email for the qualified lead and polite responose for the unqualified:\n\nLead Details:\n- Name: {{ $json.query['\"name\"'] }}\n- Business Type: {{ $json.query['\"business_type\"'] }}\n- Monthly Revenue:{{ $json.query['\"monthly_revenue\"'] }}\n- Challenge: {{ $json.query['\"biggest_challenge\"'] }}\nThe email should:\n1. Acknowledge their specific challenge with empathy\n2. Position Sarah as someone who has helped others in similar situations\n3. Include a soft CTA to book a call\n4. Be warm, professional, and conversational\n\nProvide the output as object with 'subject' and 'body' and 'qualification status' fields .",
+        "hasOutputParser": true,
+        "options": {}
+      },
+      "id": "7580e422-6721-492e-9336-8e424cc38c9c",
+      "name": "Generate Personalized Email",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -5936,
+        1152
+      ]
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n\t\"type\": \"object\",\n\t\"required\": [\"subject\", \"body\",\"status\"],\n\t\"properties\": {\n\t\t\"subject\": {\n\t\t\t\"type\": \"string\"\n\t\t},\n\t\t\"body\": {\n\t\t\t\"type\": \"string\"},\n          \"status\":{\n            \"type\":\"string\"\n          }\n          \n\t\t}\n\t}\n",
+        "autoFix": true
+      },
+      "id": "97716fd2-eaa8-490a-bf7d-d0e76bb817d5",
+      "name": "Structured Output Parser",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        -5872,
+        1440
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.5-flash-lite",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -5936,
+        1664
+      ],
+      "id": "c8dea2ba-d6f1-4fbf-ace6-c092f5226ef4",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "sgggS5H7EIeN0SLs",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1xVF5YaGIkOSY5GTBEnYEYI_p5F4nyTSqEhQVAk7goOE",
+          "mode": "list",
+          "cachedResultName": "Lead qualification",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1xVF5YaGIkOSY5GTBEnYEYI_p5F4nyTSqEhQVAk7goOE/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "الورقة1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1xVF5YaGIkOSY5GTBEnYEYI_p5F4nyTSqEhQVAk7goOE/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "email": "={{ $('Form Submission Webhook').item.json.query['\"email\"'] }}",
+            "lead name": "={{ $('Form Submission Webhook').item.json.query['\"name\"'] }}",
+            "qualification status": "={{ $('Generate Personalized Email').item.json.output.status }}",
+            "ai response": "={{ $('Generate Personalized Email').item.json.output.body }}"
+          },
+          "matchingColumns": [
+            "email"
+          ],
+          "schema": [
+            {
+              "id": "lead name",
+              "displayName": "lead name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "qualification status",
+              "displayName": "qualification status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "ai response",
+              "displayName": "ai response",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "34cd2ea7-c999-40fb-8b02-8766683978de",
+      "name": "Store Lead Data",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        -5492,
+        1152
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "jDJixhuzugRllTMc",
+          "name": "Google Sheets account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Form Submission Webhook').item.json.query['\"email\"'] }}",
+        "subject": "={{ $json.output.subject }}",
+        "message": "={{ $json.output.body }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        -5488,
+        1328
+      ],
+      "id": "083cd7e8-3c8c-44de-85d3-d5685f05f362",
+      "name": "Send a message",
+      "webhookId": "4d234bd6-3a06-4b74-b05f-ef0e7ae4706b",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "LhBtdnvFNdZcpbLa",
+          "name": "Gmail account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "content": "## Lead Management Agent\n\n",
+        "height": 720,
+        "width": 448,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -6016,
+        1072
+      ],
+      "typeVersion": 1,
+      "id": "2118ca8f-70e0-4ed3-8c06-e4ee0793a568",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## storing leads data\n",
+        "height": 240,
+        "width": 256,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -5568,
+        1072
+      ],
+      "typeVersion": 1,
+      "id": "a104bf2f-0d2c-45af-ba19-044cda81ddbe",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "## Responding with Requirements \n\n",
+        "height": 720,
+        "width": 272,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -5312,
+        1072
+      ],
+      "typeVersion": 1,
+      "id": "0b8a28e6-e00a-4f24-a2e6-cb858d1119da",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {}
+      },
+      "id": "bef67eab-755f-4115-9724-52def85ecc4d",
+      "name": "Send Response to Form",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        -5216,
+        1152
+      ]
+    },
+    {
+      "parameters": {
+        "content": "\n\n\n\n\n\n\n\n\n\n\n\n## sending personalized e-mail \n\n",
+        "height": 480,
+        "width": 256,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -5568,
+        1312
+      ],
+      "typeVersion": 1,
+      "id": "503f97df-10d2-4393-93e0-90c3f5976f6b",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "## Collecting Leads Data \n",
+        "height": 720,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -6256,
+        1072
+      ],
+      "typeVersion": 1,
+      "id": "294f3327-8473-46c1-af3a-1eb63667b4ca",
+      "name": "Sticky Note4"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Form Submission Webhook": {
+      "main": [
+        [
+          {
+            "node": "Generate Personalized Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Generate Personalized Email",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Personalized Email": {
+      "main": [
+        [
+          {
+            "node": "Store Lead Data",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Generate Personalized Email",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Structured Output Parser",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Store Lead Data": {
+      "main": [
+        [
+          {
+            "node": "Send Response to Form",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "25fe62d8-7210-46c8-b02d-899a8ff4a935",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "c49067f636df3ebdcdb9b41d2dc9d8043a1fd57519db573640c029c3ebc7f266"
+  },
+  "id": "G2CSSMeP95B7Vffg-b984",
+  "tags": []
+}
