@@ -5,7 +5,7 @@ AI-powered Lead Management Assistant for Career Coaches built with n8n and Googl
 
 # This project is an AI-powered lead management system built to help coaches and consultants save time, qualify leads automatically, and respond professionally without manual work.
 
-🚀 What This System Does for You
+## 🚀 What This System Does for You
 
 Automatically collects lead information from your form
 
@@ -19,7 +19,7 @@ Stores all lead data in one organized Google Sheet
 
 Works 24/7 without human intervention
 
-🧠 Smart Lead Qualification
+## 🧠 Smart Lead Qualification
 
 The assistant analyzes each submission and decides whether the lead is:
 
@@ -29,7 +29,7 @@ Not Qualified → receives a respectful response without wasting your time
 
 No more manual screening or delayed replies.
 
-💡 Key Benefits
+## 💡 Key Benefits
 
 Save hours of repetitive work
 
@@ -43,7 +43,7 @@ Focus only on high-value leads
 
 Scales easily as your business grows
 
-🛠 How It Works (Behind the Scenes)
+## 🛠 How It Works (Behind the Scenes)
 
 AI reviews lead details and understands their challenges
 
@@ -55,7 +55,7 @@ Logs everything for tracking and follow-up
 
 (You don’t need to manage or understand any technical tools.)
 
-🎯 Ideal For
+## 🎯 Ideal For
 
 Career Coaches
 
@@ -67,17 +67,17 @@ Service-based businesses
 
 High-volume lead forms
 
-📈 Why Clients Use This System
+## 📈 Why Clients Use This System
 
 Because your time is best spent coaching, not sorting emails.
 
 This assistant ensures every lead gets the right response, instantly.
 
-📹 Demo
+## 📹 Demo
 
 A short demo video shows the system working live from form submission to email delivery and data storage on my linkedin account .
 
-📩 Want This for Your Business?
+## 📩 Want This for Your Business?
 
 This system can be customized to:
 
